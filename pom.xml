@@ -1,0 +1,167 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>ch.inser.isejawa.pom</groupId>
+		<artifactId>is-pom-project</artifactId>
+		<version>6.0.1</version>
+	</parent>
+
+	<groupId>ch.inser.isejawa</groupId>
+	<artifactId>is-birt</artifactId>
+	<version>6.0.1</version>
+
+	<packaging>jar</packaging>
+
+	<name>${project.artifactId}</name>
+
+	<properties>
+		<sonar.dependencyCheck.htmlReportPath>./target/dependency-check-report.html</sonar.dependencyCheck.htmlReportPath>
+		<sonar.dependencyCheck.jsonReportPath>./target/dependency-check-report.json</sonar.dependencyCheck.jsonReportPath>
+		<sonar.dependencyCheck.summarize>true</sonar.dependencyCheck.summarize>
+	</properties>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.owasp</groupId>
+				<artifactId>dependency-check-maven</artifactId>
+				<version>8.4.3</version><!--Mettre à jour cette version régulièrement-->
+				<configuration>
+					<formats>
+						<format>html</format>
+						<format>json</format>
+					</formats>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+	<dependencies>
+		<!-- librairies internes -->
+		<dependency>
+			<groupId>ch.inser.isejawa</groupId>
+			<artifactId>is-rest</artifactId>
+			<version>6.0.1</version>
+		</dependency>
+
+		<dependency>
+		    <groupId>jakarta.servlet</groupId>
+		    <artifactId>jakarta.servlet-api</artifactId>
+		    <version>6.0.0</version>
+		    <scope>provided</scope>
+		</dependency>
+
+		<!-- Pour les tests -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- BIRT dependencies -->
+
+
+		<!-- Birt 4.6 originale qui ne marche pas correctement 
+		<dependency> 
+			<groupId>org.eclipse.birt.runtime</groupId> 
+			<artifactId>org.eclipse.birt.runtime</artifactId> 
+			<version>4.6.0-20160607</version> 
+		</dependency> -->
+		
+
+		<!-- Birt 4.6 corrigé -->
+		<dependency>
+			<groupId>ch.inser.birt</groupId>
+			<artifactId>birt-runtime</artifactId>
+			<version>4.6.0</version>
+			<exclusions>
+				<!-- Too old, in conflict with is-core -->
+				<exclusion>
+					<groupId>org.eclipse.birt.runtime.3_7_1</groupId>
+       				<artifactId>org.apache.xerces</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<!-- Newer version of xerces. Certain reports need a saxparser -->
+		<dependency>
+		    <groupId>org.apache.xerces</groupId>
+		    <artifactId>org.apache.xerces</artifactId>
+		    <version>2.12.2</version>
+		</dependency> 
+		<!-- Birt 4.9.0 has no functioning runtime in maven 
+		<dependency>
+		    <groupId>org.eclipse.birt</groupId>
+		    <artifactId>org.eclipse.birt.core</artifactId>
+		    <version>4.9.0</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.eclipse.birt</groupId>
+		    <artifactId>org.eclipse.birt.report.engine</artifactId>
+		    <version>4.9.0</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.eclipse.birt</groupId>
+		    <artifactId>org.eclipse.birt.chart.engine</artifactId>
+		    <version>4.9.0</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.eclipse.birt</groupId>
+		    <artifactId>org.eclipse.birt.report.model</artifactId>
+		    <version>4.9.0</version>
+		</dependency>
+		<dependency>
+		   <groupId>org.eclipse.birt</groupId>
+		   <artifactId>org.eclipse.birt.data</artifactId>
+		   <version>4.9.0</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.itextpdf</groupId>
+		    <artifactId>itextpdf</artifactId>
+		    <version>5.5.13.3</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.eclipse.birt</groupId>
+		    <artifactId>birt-runtime-osgi</artifactId>
+		    <version>4.9.0</version>
+		</dependency> -->
+
+		<!-- Utilisé par Birt runtime 4.6.0 -->
+		<dependency>
+			<groupId>net.sf.jtidy</groupId>
+			<artifactId>jtidy</artifactId>
+			<version>r938</version>
+		</dependency> 
+
+		<!-- https://mvnrepository.com/artifact/org.eclipse.birt.runtime/org.eclipse.birt.runtime <dependency> <groupId>org.eclipse.birt.runtime</groupId> 
+			<artifactId>org.eclipse.birt.runtime</artifactId> <version>4.5.0</version> <exclusions> <exclusion> <groupId>org.eclipse.birt.runtime</groupId> 
+			<artifactId>org.eclipse.osgi</artifactId> </exclusion> </exclusions> </dependency> -->
+		<!-- https://mvnrepository.com/artifact/org.eclipse.tycho/org.eclipse.osgi <dependency> <groupId>org.eclipse.tycho</groupId> <artifactId>org.eclipse.osgi</artifactId> 
+			<version>3.10.100.v20150529-1857</version> </dependency> -->
+		<!-- <dependency> <groupId>org.eclipse.birt.runtime</groupId> <artifactId>org.eclipse.birt.runtime</artifactId> <version>4.4.1</version> </dependency> -->
+		<!-- <dependency> <groupId>ch.inser.birt</groupId> <artifactId>birt-runtime</artifactId> <version>3.7.2</version> <type>pom</type> </dependency> -->
+
+		<!-- END OF BIRT dependencies -->
+
+	</dependencies>
+	<distributionManagement>
+		<repository>
+			<id>gitlab-maven</id>
+			<url>http://gitlab.inser.ch:5061/api/v4/projects/30/packages/maven</url>
+		</repository>
+		<snapshotRepository>
+			<id>gitlab-maven</id>
+			<url>http://gitlab.inser.ch:5061/api/v4/projects/30/packages/maven</url>
+		</snapshotRepository>
+	</distributionManagement>
+</project>
